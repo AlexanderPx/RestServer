@@ -1,39 +1,20 @@
+require('./config/config')
 const express = require('express');
 const app = express();
-const bodyParser = require('body-parser');
-require('./config/config')
-
-// parse application/x-www-form-urlencoded
+const bodyParser = require('body-parser')
+const mongoose = require('mongoose')
+    // parse applicaction/
 app.use(bodyParser.urlencoded({ extended: false }))
-
-// parse application/json
+    // parse aplicationjson
 app.use(bodyParser.json())
+    //rutas de usuario
+app.use(require('./routes/index'))
 
-app.get(`/usuario`, (req, res) => {
-    res.json(`get usuario`);
-});
-app.post(`/usuario`, (req, res) => {
-    let body = req.body
-    if (body.nombre === undefined) {
-        res.status(400).json({
-            ok: false,
-            mensaje: "El nombre es necesario"
-        });
-    } else {
-        res.json({
-            persona: body
-        });
-    }
-
-});
-app.put(`/usuario`, (req, res) => {
-    res.json(`put usuario`);
-});
-app.delete(`/usuario`, (req, res) => {
-    res.json(`delete usuario`);
-});
-
+mongoose.connect('mongodb://localhost:27017/cafe', { useCreateIndex: true, useUnifiedTopology: true }, (err, res) => {
+    if (err) throw err
+    console.log("Base de datos online");
+})
 
 app.listen(process.env.PORT, () => {
-    console.log("Escuchando en el puerto ", 3000);
-});
+    console.log("escuchando el puerto ", 3000);
+})
